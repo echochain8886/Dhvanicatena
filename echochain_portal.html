@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECHOCHAIN | The Fabric Awaits</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --cyan: #00ffff;
+      --magenta: #ff00ff;
+      --yellow: #ffff00;
+      --green: #00ff00;
+      --orange: #ff6600;
+      --purple: #9900ff;
+      --white: #ffffff;
+      --pink: #ff0066;
+      --teal: #00ffcc;
+      --bg-dark: #000;
+      --bg-panel: #0a0a0a;
+    }
+    
+    body {
+      background: var(--bg-dark);
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 40px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 70%, transparent 100%);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--cyan);
+      text-shadow: 0 0 20px var(--cyan), 0 0 40px var(--cyan);
+      cursor: pointer;
+      letter-spacing: 4px;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 40px;
+    }
+    
+    .nav-link {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: #666;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      color: var(--magenta);
+      text-shadow: 0 0 10px var(--magenta);
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--magenta);
+      transition: width 0.3s;
+    }
+    
+    .nav-link:hover::after, .nav-link.active::after {
+      width: 100%;
+    }
+    
+    /* Sections */
+    section {
+      display: none;
+      min-height: 100vh;
+      padding: 120px 40px 60px;
+    }
+    
+    section.active { display: block; }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    /* Home Section */
+    #home {
+      background: radial-gradient(ellipse at center, #1a0a2e 0%, #0d0015 40%, #000 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    
+    #home.active { display: flex; }
+    
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 80px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 40px var(--cyan), 0 0 80px var(--magenta);
+      letter-spacing: 15px;
+      margin-bottom: 20px;
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+      from { text-shadow: 0 0 40px var(--cyan), 0 0 80px var(--magenta); }
+      to { text-shadow: 0 0 60px var(--magenta), 0 0 100px var(--cyan); }
+    }
+    
+    .hero-subtitle {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #555;
+      letter-spacing: 12px;
+      margin-bottom: 100px;
+      text-transform: uppercase;
+    }
+    
+    .portals {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .portal {
+      width: 320px;
+      height: 420px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 50px 35px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .portal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    
+    .portal:hover::before { opacity: 1; }
+    
+    .portal:hover {
+      transform: translateY(-15px);
+      border-color: var(--cyan);
+      box-shadow: 0 30px 80px rgba(0,255,255,0.15), 0 0 0 1px var(--cyan);
+    }
+    
+    .portal:nth-child(2):hover {
+      border-color: var(--magenta);
+      box-shadow: 0 30px 80px rgba(255,0,255,0.15), 0 0 0 1px var(--magenta);
+    }
+    
+    .portal:nth-child(2)::before {
+      background: linear-gradient(90deg, transparent, var(--magenta), transparent);
+    }
+    
+    .portal:nth-child(3):hover {
+      border-color: var(--yellow);
+      box-shadow: 0 30px 80px rgba(255,255,0,0.15), 0 0 0 1px var(--yellow);
+    }
+    
+    .portal:nth-child(3)::before {
+      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
+    }
+    
+    .portal-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      margin-bottom: 15px;
+    }
+    
+    .portal:nth-child(1) .portal-label { color: var(--cyan); }
+    .portal:nth-child(2) .portal-label { color: var(--magenta); }
+    .portal:nth-child(3) .portal-label { color: var(--yellow); }
+    
+    .portal-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    
+    .portal:nth-child(1):hover .portal-title { text-shadow: 0 0 30px var(--cyan); }
+    .portal:nth-child(2):hover .portal-title { text-shadow: 0 0 30px var(--magenta); }
+    .portal:nth-child(3):hover .portal-title { text-shadow: 0 0 30px var(--yellow); }
+    
+    .portal-desc {
+      font-size: 14px;
+      color: #555;
+      font-style: italic;
+    }
+    
+    .portal-glow {
+      position: absolute;
+      bottom: -80px;
+      right: -80px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+    
+    .portal:nth-child(1) .portal-glow { background: radial-gradient(circle, var(--cyan) 0%, transparent 70%); }
+    .portal:nth-child(2) .portal-glow { background: radial-gradient(circle, var(--magenta) 0%, transparent 70%); }
+    .portal:nth-child(3) .portal-glow { background: radial-gradient(circle, var(--yellow) 0%, transparent 70%); }
+    
+    /* Page Headers */
+    .page-header {
+      margin-bottom: 60px;
+    }
+    
+    .page-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      margin-bottom: 15px;
+    }
+    
+    .page-title {
+      font-family: 'Cinzel', serif;
+      font-size: 52px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    
+    /* Dhvanicatena Section */
+    #dhvanicatena { background: linear-gradient(180deg, #0a1628 0%, #000 100%); }
+    #dhvanicatena .page-label { color: var(--cyan); }
+    #dhvanicatena .page-title { text-shadow: 0 0 40px rgba(0,255,255,0.3); }
+    
+    .quatrains-box {
+      background: linear-gradient(180deg, rgba(0,255,255,0.05) 0%, transparent 100%);
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 8px;
+      padding: 60px;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    
+    .quatrains-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 1px;
+      background: var(--cyan);
+    }
+    
+    .quatrains {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      line-height: 2.4;
+      color: #aaddee;
+      text-align: center;
+      white-space: pre-line;
+    }
+    
+    .question-box {
+      background: rgba(255,0,255,0.05);
+      border: 1px solid rgba(255,0,255,0.2);
+      border-radius: 8px;
+      padding: 50px;
+      margin-bottom: 60px;
+    }
+    
+    .question-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: var(--magenta);
+      margin-bottom: 30px;
+    }
+    
+    .author-options {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    
+    .author-option {
+      flex: 1;
+      min-width: 200px;
+      padding: 25px;
+      background: transparent;
+      border: 1px solid rgba(255,0,255,0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .author-option:hover, .author-option.selected {
+      background: rgba(255,0,255,0.1);
+      border-color: var(--magenta);
+    }
+    
+    .author-option-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--magenta);
+    }
+    
+    .author-profile {
+      display: none;
+      margin-top: 30px;
+      padding: 35px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 6px;
+      border: 1px solid rgba(255,0,255,0.15);
+    }
+    
+    .author-profile.active { display: block; }
+    
+    .author-profile p {
+      font-size: 16px;
+      line-height: 1.9;
+      color: #bbb;
+    }
+    
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: #666;
+      margin-bottom: 25px;
+    }
+    
+    .thread-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    
+    .thread-chip {
+      padding: 12px 22px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+    
+    .thread-chip:hover {
+      transform: translateY(-2px);
+    }
+    
+    /* Threads Section */
+    #threads { background: linear-gradient(180deg, #1a0a2e 0%, #000 100%); }
+    #threads .page-label { color: var(--magenta); }
+    #threads .page-title { text-shadow: 0 0 40px rgba(255,0,255,0.3); }
+    
+    .threads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 25px;
+    }
+    
+    .thread-card {
+      padding: 35px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .thread-card:hover {
+      transform: translateY(-8px);
+    }
+    
+    .thread-card-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    
+    .thread-card-info {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    
+    .thread-card-info strong {
+      color: #888;
+    }
+    
+    /* Back Button */
+    .back-btn {
+      font-size: 14px;
+      color: #555;
+      cursor: pointer;
+      margin-bottom: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: color 0.3s;
+    }
+    
+    .back-btn:hover { color: var(--magenta); }
+    
+    /* Thread Detail */
+    .thread-detail, .strand-detail { display: none; }
+    .thread-detail.active, .strand-detail.active { display: block; }
+    
+    .thread-detail-header {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .thread-detail-info {
+      font-size: 14px;
+      color: #777;
+    }
+    
+    .thread-description {
+      font-size: 18px;
+      line-height: 1.9;
+      color: #aaa;
+      margin-bottom: 50px;
+      max-width: 900px;
+    }
+    
+    .strands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .strand-card {
+      padding: 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .strand-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .strand-card-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    .strand-card-abilities {
+      font-size: 13px;
+      color: #666;
+    }
+    
+    /* Strand Detail */
+    .abilities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 50px;
+    }
+    
+    .ability-chip {
+      padding: 12px 22px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .knots-section {
+      margin-top: 50px;
+    }
+    
+    .knots-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    .knot-card {
+      padding: 25px 35px;
+      background: rgba(255,0,255,0.05);
+      border: 1px solid rgba(255,0,255,0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 280px;
+    }
+    
+    .knot-card:hover {
+      border-color: var(--magenta);
+      background: rgba(255,0,255,0.1);
+    }
+    
+    .knot-card-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 17px;
+      color: var(--magenta);
+      margin-bottom: 10px;
+    }
+    
+    .knot-card-threads {
+      font-size: 13px;
+      color: #777;
+    }
+    
+    .knot-detail {
+      display: none;
+      margin-top: 30px;
+      padding: 35px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,0,255,0.2);
+      border-radius: 8px;
+    }
+    
+    .knot-detail.active { display: block; }
+    
+    .knot-detail-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      color: var(--magenta);
+      margin-bottom: 15px;
+    }
+    
+    .knot-detail-shared {
+      font-size: 15px;
+      color: var(--magenta);
+      margin-bottom: 20px;
+    }
+    
+    .knot-detail-desc {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #aaa;
+    }
+    
+    .close-btn {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+    }
+    
+    .close-btn:hover { color: var(--magenta); }
+    
+    /* Universe Section */
+    #universe { background: linear-gradient(180deg, #1a1a0a 0%, #000 100%); }
+    #universe .page-label { color: var(--yellow); }
+    #universe .page-title { text-shadow: 0 0 40px rgba(255,255,0,0.3); }
+    
+    .series-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .series-card {
+      padding: 35px 45px;
+      background: linear-gradient(90deg, rgba(255,255,0,0.03) 0%, transparent 100%);
+      border: 1px solid rgba(255,255,0,0.2);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .series-card:hover {
+      border-color: var(--yellow);
+      transform: translateX(15px);
+      box-shadow: -10px 0 40px rgba(255,255,0,0.1);
+    }
+    
+    .series-card-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--yellow);
+      margin-bottom: 10px;
+    }
+    
+    .series-card-genre {
+      font-size: 13px;
+      color: #666;
+      letter-spacing: 2px;
+    }
+    
+    .series-card-arrow {
+      font-size: 28px;
+      color: rgba(255,255,0,0.3);
+    }
+    
+    .series-card:hover .series-card-arrow { color: var(--yellow); }
+    
+    /* Series Detail */
+    .series-detail { display: none; }
+    .series-detail.active { display: block; }
+    
+    .series-genre {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: var(--yellow);
+      margin-bottom: 15px;
+    }
+    
+    .series-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 50px;
+      text-shadow: 0 0 30px rgba(255,255,0,0.3);
+      line-height: 1.3;
+    }
+    
+    .synopsis-box {
+      background: rgba(255,255,0,0.03);
+      border: 1px solid rgba(255,255,0,0.2);
+      border-radius: 8px;
+      padding: 50px;
+      margin-bottom: 50px;
+    }
+    
+    .synopsis-text {
+      font-size: 18px;
+      line-height: 2;
+      color: #ccc;
+    }
+    
+    .synopsis-text::first-letter {
+      font-family: 'Cinzel', serif;
+      font-size: 56px;
+      float: left;
+      line-height: 1;
+      margin-right: 15px;
+      margin-top: 8px;
+      color: var(--yellow);
+    }
+    
+    .featured-knot {
+      margin-top: 40px;
+      padding: 30px;
+      background: rgba(255,0,255,0.05);
+      border: 1px solid rgba(255,0,255,0.2);
+      border-radius: 8px;
+      max-width: 500px;
+    }
+    
+    .featured-knot-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    
+    .featured-knot-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      color: var(--magenta);
+      margin-bottom: 10px;
+    }
+    
+    .featured-knot-desc {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.7;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { padding: 15px 20px; }
+      .logo { font-size: 20px; }
+      .nav-links { gap: 20px; }
+      .nav-link { font-size: 11px; letter-spacing: 2px; }
+      
+      section { padding: 100px 20px 40px; }
+      
+      .hero-title { font-size: 40px; letter-spacing: 8px; }
+      .hero-subtitle { font-size: 12px; letter-spacing: 6px; }
+      
+      .portal { width: 100%; height: auto; min-height: 280px; }
+      
+      .page-title { font-size: 32px; }
+      
+      .threads-grid { grid-template-columns: 1fr; }
+      .strands-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="showSection('home')">ECHOCHAIN</div>
+  <div class="nav-links">
+    <div class="nav-link" data-section="dhvanicatena" onclick="showSection('dhvanicatena')">THE PROPHECY</div>
+    <div class="nav-link" data-section="threads" onclick="showSection('threads')">THE THREADS</div>
+    <div class="nav-link" data-section="universe" onclick="showSection('universe')">THE UNIVERSE</div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+  <h1 class="hero-title">ECHOCHAIN</h1>
+  <p class="hero-subtitle">The Fabric Awaits</p>
+  
+  <div class="portals">
+    <div class="portal" onclick="showSection('dhvanicatena')">
+      <div>
+        <div class="portal-label">Dhvanicatenā</div>
+        <div class="portal-title">THE PROPHECY</div>
+      </div>
+      <div class="portal-desc">The Chain of Resonance</div>
+      <div class="portal-glow"></div>
+    </div>
+    
+    <div class="portal" onclick="showSection('threads')">
+      <div>
+        <div class="portal-label">Nine Bloodlines</div>
+        <div class="portal-title">THE THREADS</div>
+      </div>
+      <div class="portal-desc">Powers by suffering bought</div>
+      <div class="portal-glow"></div>
+    </div>
+    
+    <div class="portal" onclick="showSection('universe')">
+      <div>
+        <div class="portal-label">Six Books</div>
+        <div class="portal-title">THE UNIVERSE</div>
+      </div>
+      <div class="portal-desc">From Compliance to Memory</div>
+      <div class="portal-glow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- DHVANICATENA -->
+<section id="dhvanicatena">
+  <div class="container">
+    <div class="page-header">
+      <div class="page-label">THE CHAIN OF RESONANCE</div>
+      <h1 class="page-title">Dhvanicatenā</h1>
+    </div>
+    
+    <div class="quatrains-box">
+      <div class="quatrains">Nine bloodlines marked shall rise at last
+When silver chains bind mortal thought,
+Each bearing signs of ancient cast
+And powers by their suffering bought.
+
+Through living Fabric, Threads are spun,
+Nine lines of power, branching wide,
+Each splits to Strands before it's done—
+Your birth decides which path you ride.
+
+When bearers touch of different Thread,
+The Fabric weaves a binding Knot,
+New powers bloom where hands are wed—
+What neither held, now both have got.</div>
+    </div>
+    
+    <div class="question-box">
+      <div class="question-title">WHO WROTE THIS PROPHECY?</div>
+      <div class="author-options">
+        <div class="author-option" onclick="selectAuthor('helena')">
+          <div class="author-option-name">HELENA HERNANDEZ</div>
+        </div>
+        <div class="author-option" onclick="selectAuthor('jose')">
+          <div class="author-option-name">JOSE</div>
+        </div>
+        <div class="author-option" onclick="selectAuthor('mirror')">
+          <div class="author-option-name">THE WOMAN IN THE MIRROR</div>
+        </div>
+      </div>
+      
+      <div class="author-profile" id="author-helena">
+        <p>Four generations descended from Jose Hernandez. Famed restaurateur who transformed the hacienda in 1927 with her Pueblo Deco vision—geometric boldness, vibrant turquoise and coral, stylized thunderbird motifs. She lived until the mid-1990s, maintaining seed collections, preservation records, perfume bottles in trunks. Helena knew something was coming. She prepared without knowing what she prepared for. The cellar holds her handwriting on seed jars dated through the early 1990s. Her journal entries end in 1994. The trunk she left contains Czech glass bottles that would find their bearers decades later. How did she know? How did she see across generations to leave gifts for women she would never meet?</p>
+      </div>
+      
+      <div class="author-profile" id="author-jose">
+        <p>A Houron. One of the rarest Threads—perhaps only one Timeborne exists at any moment in the world. He can see across the Fabric the way others see across rooms. Write letters dated 2025 in 1962. Leave instructions that won't make sense until the exact moment someone needs them. His name echoes through the hacienda's history—Jose Hernandez, who built the original structure in 1765. But was he merely the builder, or something more? When he offers Charlie another way to save Joni, she senses deception beneath the promise. What does he want? What has he seen? The timeline bends around him like light around a star.</p>
+      </div>
+      
+      <div class="author-profile" id="author-mirror">
+        <p>She carries Joan Crawford's commanding severity, Marilyn Monroe's intoxicating appeal, and something darker threading through—Ursula's calculating manipulation, deals that seem generous while stealing everything that matters. When her influence touches consciousness, it arrives with the texture of vintage film—slightly too saturated, movements both languid and sharp. She is not working with Tenebraun. She is working <em>through</em> him, slowly colonizing his consciousness, each instance of contact allowing deeper access to his psyche. Certain mannerisms that are distinctly hers bleed into his behavior: the tilt of his head, particular cadences in his speech. She has been doing this for centuries. She wants the Stormcaller. She may have written the prophecy that predicts her own victory.</p>
+      </div>
+    </div>
+    
+    <div class="section-title">THE NINE THREADS</div>
+    <div class="thread-links" id="dhvani-thread-links"></div>
+  </div>
+</section>
+
+<!-- THREADS -->
+<section id="threads">
+  <div class="container">
+    <!-- Main Thread List -->
+    <div id="threads-main">
+      <div class="page-header">
+        <div class="page-label">NINE BLOODLINES</div>
+        <h1 class="page-title">The Threads</h1>
+      </div>
+      <p class="thread-description">When the Fabric concentrated its power in the Free, nine distinct manifestations emerged. Each Thread branches into Strands. Each Strand can weave into Knots.</p>
+      <div class="threads-grid" id="threads-grid"></div>
+    </div>
+    
+    <!-- Thread Detail -->
+    <div class="thread-detail" id="thread-detail">
+      <div class="back-btn" onclick="showThreadsMain()">← Back to Threads</div>
+      <div class="page-header">
+        <h1 class="page-title" id="thread-detail-name"></h1>
+      </div>
+      <div class="thread-detail-header">
+        <div class="thread-detail-info"><strong>Visual Identifier:</strong> <span id="thread-detail-visual"></span></div>
+        <div class="thread-detail-info"><strong>Natural Behavior:</strong> <span id="thread-detail-behavior"></span></div>
+      </div>
+      <p class="thread-description" id="thread-detail-desc"></p>
+      <div class="section-title">STRANDS</div>
+      <div class="strands-grid" id="strands-grid"></div>
+    </div>
+    
+    <!-- Strand Detail -->
+    <div class="strand-detail" id="strand-detail">
+      <div class="back-btn" onclick="showThreadDetail(currentThread)">← Back to <span id="strand-back-thread"></span></div>
+      <div class="page-header">
+        <h1 class="page-title" id="strand-detail-name"></h1>
+      </div>
+      <div class="section-title">ABILITIES</div>
+      <div class="abilities-list" id="abilities-list"></div>
+      
+      <div class="knots-section" id="knots-section">
+        <div class="section-title">AVAILABLE KNOTS</div>
+        <div class="knots-grid" id="knots-grid"></div>
+        <div class="knot-detail" id="knot-detail">
+          <div class="knot-detail-title" id="knot-detail-name"></div>
+          <div class="knot-detail-shared"><strong>Shared Ability:</strong> <span id="knot-detail-shared"></span></div>
+          <p class="knot-detail-desc" id="knot-detail-desc"></p>
+          <div class="close-btn" onclick="closeKnotDetail()">Close ×</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSE -->
+<section id="universe">
+  <div class="container">
+    <!-- Series List -->
+    <div id="universe-main">
+      <div class="page-header">
+        <div class="page-label">SIX BOOKS</div>
+        <h1 class="page-title">The Universe</h1>
+      </div>
+      <p class="thread-description">From Compliance to Memory. The Fabric expands.</p>
+      <div class="series-list" id="series-list"></div>
+    </div>
+    
+    <!-- Series Detail -->
+    <div class="series-detail" id="series-detail">
+      <div class="back-btn" onclick="showUniverseMain()">← Back to Series</div>
+      <div class="series-genre" id="series-detail-genre"></div>
+      <h1 class="series-title" id="series-detail-title"></h1>
+      <div class="synopsis-box">
+        <p class="synopsis-text" id="series-detail-synopsis"></p>
+      </div>
+      <div class="section-title">THREADS INVOLVED</div>
+      <div class="thread-links" id="series-threads"></div>
+      <div class="featured-knot" id="featured-knot" style="display:none;">
+        <div class="featured-knot-label">FEATURED KNOT</div>
+        <div class="featured-knot-name" id="featured-knot-name"></div>
+        <div class="featured-knot-desc" id="featured-knot-desc"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// DATA
+const threads = {
+  stormcallers: {
+    name: 'STORMCALLERS',
+    visual: 'White Hair',
+    behavior: 'Restless before storms, calm during, rested after',
+    description: 'Stormcallers commune with primal forces through five elemental paths. Each develops abilities within one element that resonates with their essential nature. Element resonance is inherent—cannot be taught or changed.',
+    color: '#00ffff',
+    strands: {
+      firecaller: { name: 'Firecaller', abilities: ['Combustive Touch', 'Flame Weaponry', 'Fire Mastery', 'Fire Immunity', 'Extinguishing'], knots: ['bloom', 'primal'] },
+      earthcaller: { name: 'Earthcaller', abilities: ['Ground Disruption', 'Earth Projectiles', 'Stone Connection', 'Tremors', 'Vibration Sense', 'Hardened Skin'], knots: ['bloom', 'primal'] },
+      windcaller: { name: 'Windcaller', abilities: ['Wind Flight', 'Storm Control', 'Wind Shield', 'Silencing Fog', 'Projectile Deflection', 'Pressure Sense'], knots: ['bloom', 'primal'] },
+      watercaller: { name: 'Watercaller', abilities: ['Hydro Combat', 'Water Survival', 'Environmental Mastery', 'Water Walking', 'Underwater Breathing'], knots: ['bloom', 'primal'] },
+      plantcaller: { name: 'Plantcaller', abilities: ['Entangling Growth', 'Root & Bloom', 'Toxic Cultivation', 'Instant Brush Barriers', 'Poisonous Food Mimicry'], knots: ['bloom', 'primal'] }
+    }
+  },
+  wildforged: {
+    name: 'WILDFORGED',
+    visual: 'Goat Eyes (horizontal rectangular pupils)',
+    behavior: 'Eyes dart like owls and predatory birds',
+    description: 'Wildforged bridge human and animal understanding through five distinct approaches. Each develops abilities based on what they naturally seek from animal relationships. Purpose of connection is inherent to individual nature.',
+    color: '#00ff00',
+    strands: {
+      wildvoiced: { name: 'Wildvoiced', abilities: ['Direct Mental Communication', 'Animals as Communication Vectors', 'Understanding Animal Emotions'], knots: ['primal'] },
+      wildscouts: { name: 'Wildscouts', abilities: ['Animals as Early Warning Systems', 'Tracking Through Animal Networks', 'Sensing Through Animals\' Senses'], knots: ['primal'] },
+      wildwardens: { name: 'Wildwardens', abilities: ['Coordinated Animal Attacks', 'Animals Creating Distractions', 'Calming Hostile Animals'], knots: ['primal'] },
+      wildfeeders: { name: 'Wildfeeders', abilities: ['Animals Sharing Food/Resources', 'Riding Larger Animals', 'Animals Retrieving Objects'], knots: ['primal'] },
+      wildbound: { name: 'Wildbound', abilities: ['Animals Providing Camouflage', 'Deep Bonding', 'Shared Perception'], knots: ['primal'] }
+    }
+  },
+  thoughtwalkers: {
+    name: 'THOUGHTWALKERS',
+    visual: 'Labradorite Eyes (iridescent, constantly shifting colors)',
+    behavior: 'Avoid eye contact',
+    description: 'Thoughtwalkers access mental and psychic abilities through four approaches to mind interaction. Experienced practitioners can learn all four strands. Cognitive load and mental exhaustion are the costs.',
+    color: '#ff00ff',
+    strands: {
+      truthtalker: { name: 'Truthtalker', abilities: ['Lie Detection', 'Memory Reading', 'Truth Compulsion', 'Psychic Interrogation', 'Deception Sensing'], knots: ['safe', 'phantom', 'oracle'] },
+      mindweaver: { name: 'Mindweaver', abilities: ['Emotion Manipulation', 'Mental Confusion', 'Empathy Web', 'Psychic Compulsion', 'Memory Erasure'], knots: ['safe', 'phantom', 'oracle'] },
+      forceweaver: { name: 'Forceweaver', abilities: ['Telekinesis', 'Levitation', 'Force Barriers', 'Psychic Crush', 'Object Manipulation'], knots: ['safe', 'phantom', 'oracle'] },
+      dreamtalker: { name: 'Dreamtalker', abilities: ['Dream Walking', 'Prophetic Visions', 'Sleep Manipulation', 'Nightmare Creation', 'Dream Communication'], knots: ['safe', 'phantom', 'oracle'] }
+    }
+  },
+  brutals: {
+    name: 'BRUTALS',
+    visual: 'Enhanced Musculature & Presence',
+    behavior: 'Physically intimidating appearance',
+    description: 'Brutals manifest physical enhancement through five specialization types. Each is born with their specific enhancement type—cannot be taught. Severe physical costs include massive caloric needs, joint damage, and sensory overload.',
+    color: '#ff6600',
+    strands: {
+      titans: { name: 'Titans', abilities: ['Enhanced Strength', 'Super Speed', 'Perfect Balance'], knots: [] },
+      tankers: { name: 'Tankers', abilities: ['Unbreakable Bone Density', 'Enhanced Hearing', 'Burst Movement'], knots: [] },
+      anvils: { name: 'Anvils', abilities: ['Muscle Hardening', 'Enhanced Vision', 'Enhanced Reflexes', 'Joint Flexibility'], knots: [] },
+      stalkers: { name: 'Stalkers', abilities: ['Healing Factor', 'Enhanced Smell', 'Wall Climbing', 'Vibration Sensing'], knots: [] },
+      ghostwalkers: { name: 'Ghostwalkers', abilities: ['Invisibility/Camouflage', 'Enhanced Taste', 'Enhanced Agility'], knots: [] }
+    }
+  },
+  shadowsworn: {
+    name: 'SHADOWSWORN',
+    visual: 'Pure Black Eyes (no iris, pupil, or whites visible)',
+    behavior: 'Shy of bright lights',
+    description: 'Shadowsworn channel dark powers through five domains. Experienced practitioners can learn all five strands. Progressive psychological corruption is the cost—abilities eating away at whatever remains of moral compass.',
+    color: '#9900ff',
+    strands: {
+      bloodbinders: { name: 'Bloodbinders', abilities: ['Blood Rituals', 'Life Force Transfer', 'Blood Scrying', 'Blood Weapons', 'Blood Tracking'], knots: ['umbral'] },
+      darkbound: { name: 'Darkbound', abilities: ['Shadow Travel', 'Darkness Control', 'Fear Projection', 'Shadow Constructs', 'Nightmare Creation'], knots: ['umbral'] },
+      blightbinders: { name: 'Blightbinders', abilities: ['Disease Creation', 'Accelerated Decay', 'Poisoning Touch', 'Plague Immunity', 'Necrotic Wounds'], knots: ['umbral'] },
+      deathbound: { name: 'Deathbound', abilities: ['Speaking with Dead', 'Raising Undead', 'Soul Sight', 'Death Touch', 'Soul Extraction'], knots: ['umbral'] },
+      spiritbound: { name: 'Spiritbound', abilities: ['Entity Summoning', 'Demonic Pacts', 'Possession', 'Portal Creation', 'Banishment'], knots: ['umbral'] }
+    }
+  },
+  petalbound: {
+    name: 'PETALBOUND',
+    visual: 'Pure White Eyes (no iris, pupil, or color visible)',
+    behavior: 'Calming aura/effect on others in their presence',
+    description: 'Petalbound channel sacred powers through five light domains. Experienced practitioners can learn all five strands. Gradual spiritual purification is the cost—becoming increasingly empathetic to the point of vulnerability.',
+    color: '#ffffff',
+    strands: {
+      sanurgist: { name: 'Sanurgist', abilities: ['Herbal Healing', 'Wound Mending', 'Disease Curing', 'Pain Relief', 'Vitality Restoration', 'Toxin Purging'], knots: ['safe', 'bloom'] },
+      lumenist: { name: 'Lumenist', abilities: ['Light Creation', 'Radiant Bursts', 'Light Barriers', 'Blinding Flashes', 'Purifying Radiance', 'Radiant Healing'], knots: ['safe', 'bloom'] },
+      purgist: { name: 'Purgist', abilities: ['Toxin Cleansing', 'Spiritual Cleansing', 'Corruption Removal', 'Sacred Barriers', 'Blessing Objects'], knots: ['safe', 'bloom'] },
+      verdist: { name: 'Verdist', abilities: ['Plant Acceleration', 'Life Sensing', 'Nature Communion', 'Ecosystem Balancing', 'Life Energy Channeling'], knots: ['safe', 'bloom'] },
+      salvist: { name: 'Salvist', abilities: ['Ward Creation', 'Danger Deflection', 'Sanctuary Blessing', 'Ally Shielding', 'Threat Detection'], knots: ['safe', 'bloom'] }
+    }
+  },
+  hourons: {
+    name: 'HOURONS',
+    visual: 'Ever-changing Hair Length + Independent Shadows',
+    behavior: 'Unaware whether it\'s day or night',
+    description: 'Hourons transcend normal causality through three approaches to reality manipulation. Extremely rare—at most one of each strand exists in the world at any time. Requires immense or immeasurable intelligence to manifest.',
+    color: '#ffff00',
+    strands: {
+      timeborne: { name: 'Timeborne', abilities: ['Time Dilation', 'Temporal Sight', 'Time Loops', 'Temporal Anchoring', 'Rewind (costs lifespan)'], knots: [] },
+      spaceborne: { name: 'Spaceborne', abilities: ['Phase Shifting', 'Portal Creation', 'Pocket Dimensions', 'Gravity Manipulation', 'Distance Warping'], knots: [] },
+      realityborne: { name: 'Realityborne', abilities: ['Probability Manipulation', 'Reality Anchoring', 'Existence Erasure', 'Causality Bending'], knots: [] }
+    }
+  },
+  echoran: {
+    name: 'ECHORAN',
+    visual: 'Eyes Grown Completely Shut (blind)',
+    behavior: 'Deep throat clicks, constant head turning to catch sounds',
+    description: 'Echoran perceive the world through sound in ways the sighted cannot imagine. Their blindness grants perception beyond normal sight. The Dhvanicatena speaks to them through acoustic resonance.',
+    color: '#00ffcc',
+    strands: {
+      acoustist: { name: 'Acoustist', abilities: ['Sound Manipulation', 'Sonic Attacks', 'Echo Location', 'Sound Barriers', 'Voice Throwing'], knots: ['oracle'] },
+      linguist: { name: 'Linguist', abilities: ['Instant Language Absorption', 'Universal Translation', 'Voice Mimicry', 'Language Memory'], knots: ['oracle'] },
+      echoist: { name: 'Echoist', abilities: ['Sonic Constructs', 'Sound Memory', 'Acoustic Illusions', 'Sound Manipulation'], knots: ['oracle'] }
+    }
+  },
+  vikruti: {
+    name: 'VIKRUTI',
+    visual: 'Constantly Shifting Appearance (like rotoscoping)',
+    behavior: 'Unconsciously mirror whoever they\'re talking to',
+    description: 'Vikruti manifest based on their relationship to identity itself. Their form is fluid, their perception unique. When shifting, there\'s risk of getting stuck in any form—identity itself becomes malleable.',
+    color: '#ff0066',
+    strands: {
+      mayani: { name: 'Māyāni', abilities: ['Perfect Disguise', 'Identity Theft', 'Appearance Manipulation', 'Remote Spying'], knots: ['phantom'] },
+      chayani: { name: 'Chāyāni', abilities: ['Shadow Self', 'Duplicate Creation', 'Mirror Walking'], knots: ['phantom'] },
+      rupani: { name: 'Rūpāni', abilities: ['Form Shifting', 'Size Manipulation', 'Physical Adaptation'], knots: ['phantom'] }
+    }
+  }
+};
+
+const knots = {
+  safe: { name: 'SAFE KNOT', threads: ['Petalbound', 'Thoughtwalker'], shared: 'Telepathic Herbalism', description: 'When healing meets intuition. Both partners instantly know which plants are needed for any ailment or purpose through a mental-plant connection neither possessed alone. The healer gains psychic precision; the psychic gains nature\'s pharmacy.' },
+  bloom: { name: 'BLOOM KNOT', threads: ['Stormcaller', 'Petalbound'], shared: 'Self-Sustaining Plant Ecosystems', description: 'When elemental force meets sacred light. Create living systems that sustain themselves through the marriage of storm and growth. Thunderbirds circle the sky. Fire blooms without burning the garden.' },
+  primal: { name: 'PRIMAL KNOT', threads: ['Stormcaller', 'Wildforged'], shared: 'Elemental Beast Transformation', description: 'When storm meets wild. Unlike other Knots that create merged abilities, Primal Knot grants transformation into mythological creatures—Phoenix, Leviathan, Thunderbird, Hell Hound, Basilisk. Twenty-five beast forms await those who weave this bond. While transformed, instinctively sense and communicate with your element in nature.' },
+  phantom: { name: 'PHANTOM KNOT', threads: ['Vikruti', 'Thoughtwalker'], shared: 'Death Sense Through Remote Observation', description: 'When shifting form meets shifting mind. Know when observed targets approach death. Disguise and telepathy merge into something neither Thread could achieve alone—perfect infiltration backed by psychic awareness.' },
+  oracle: { name: 'ORACLE KNOT', threads: ['Echoran', 'Thoughtwalker'], shared: 'Prophetic Sound', description: 'When sound meets thought. Hear the future in the resonance of the present. The Echoran\'s acoustic perception merges with the Thoughtwalker\'s mental abilities to create prophecy through vibration.' },
+  umbral: { name: 'UMBRAL KNOT', threads: ['Shadowsworn', 'Shadowsworn'], shared: 'The Skein', description: 'When darkness feeds darkness. Unlike other Knots, Umbral Knots can form a SKEIN—a convergence where multiple Knots combine together. All merged abilities pool and become accessible to EVERY participant. The more Shadowsworn gather, the more devastating they become. This is why Tenebraun wants the Dhvanicatena.' }
+};
+
+const series = [
+  { id: 'compliance', title: 'ECHOCHAIN PROLOGUE: COMPLIANCE', genre: 'Dystopian Horror', threads: 'all', knot: null, synopsis: 'Washington, DC. Inside the machine. A child takes their morning medication while VAMP alerts scroll across the screen like weather reports. Three White-Hairs apprehended in Sector 7. Two Visually Inconsistent reported near Memorial Bridge. Remain vigilant. Their best friend stops taking the pills. They don\'t understand why at first—rebellion? Forgetting? Then the changes begin. Their friend becomes one of the Free. And the Free get taken. We live inside the propaganda before we know it\'s propaganda. The malls haven\'t opened yet, but maybe someday. Drink your juice, Shelby.' },
+  { id: 'evolution', title: 'ECHOCHAIN I: EVOLUTION', genre: 'Supernatural Thriller', threads: 'all', knot: null, synopsis: 'Tuesday morning. Charlie presses snooze. Rhinestones catch the light. By week\'s end, she\'ll have shifting eyes, a hacienda full of refugees, and a Shadowsworn hunting someone she\'s sworn to protect. The Knots begin weaving—Safe Knot between Charlie and Joni, Bloom Knot between Kairu and Linzi. Thunderbirds circle the compound. Joni confronts Tenebraun and banishes him with light. He vows revenge. He takes Kairu, stakes him out before the hacienda, binds him with shadows, plagues him with Blightbinder rot. Joni cannot stop herself from trying to save him. The disease moves into her. She dies trying. Kairu walks back into the forest.' },
+  { id: 'subjugation', title: 'ECHOCHAIN II: SUBJUGATION', genre: 'Dark Fantasy', threads: 'all', knot: null, synopsis: 'The hacienda mourns. Charlie learns of Jose the Houron, who offers another way—timeline manipulation, a path to bring Joni back. Cali believes in Jose\'s plan. But Charlie is a Truthtalker. She senses deception beneath the promise. When Tenebraun offers to return Joni from the shadow realm for a price—the Dhvanicatena—Charlie accepts. The group fractures. One by one they leave. Cali fights hardest for Jose\'s way, leaves last, because she rejected his plan. Charlie, alone with Pig, makes the trade. Hands the prophecy to the monster who killed her friend. And it works. Joni walks out of the shadows. Pure. Whole. Exactly as she was. But Tenebraun has the book, and everyone else is gone.' },
+  { id: 'skein', title: 'ECHOCHAIN III: SKEIN', genre: 'Cosmic Horror', threads: ['shadowsworn'], knot: 'umbral', synopsis: 'We leave Charlie. We follow Tenebraun. The Dhvanicatena in his hands—the chain of resonance, the prophecy itself. The Shadowsworn gathering from the Four Corners and beyond. The mirror woman\'s influence spreading through him like vintage film bleeding through modern footage. The Umbral Skein forming—darkness feeding darkness, all merged abilities pooling into something catastrophic. This is pure horror. The cost of Charlie\'s choice made manifest. What happens when every Shadowsworn strand converges? What happens when the Skein completes?' },
+  { id: 'primal', title: 'ECHOCHAIN IV: PRIMAL', genre: 'Epic Fantasy', threads: ['stormcallers', 'wildforged'], knot: 'primal', synopsis: 'Pure fantasy. Pure wonder. Stormcallers and Wildforged discovering their beast transformations—the Primal Knot manifesting across the land. Phoenix rising from flame, communicating across impossible distances. Leviathan commanding the deep, reading currents like language. Thunderbird lighting the sky, barrier flaring with each wingbeat. Hell Hound tracking through ash and ember. Twenty-five mythological forms waiting to be claimed. This is the story of becoming something more than human—and asking whether you can ever go back. A breath of magic between horrors. The Neverending Story for those who survived the end of the world.' },
+  { id: 'progeny', title: 'ECHOCHAIN V: PROGENY', genre: 'Uncanny Coming-of-Age', threads: 'all', knot: null, synopsis: 'The next generation. Children born with abilities they didn\'t ask for, manifesting Threads they don\'t understand. Training not at a school but for a war. This isn\'t Hogwarts. This is survival. Twilight Zone playground vibes—that uncanny nostalgia, kids with too much power, something not quite right beneath the surface. They inherit the scar tissue of everything that came before. The fractured hacienda. The deal Charlie made. The Skein that formed. The beasts that roam. They are the army that rises from the ashes. They are the progeny of the Free.' },
+  { id: 'memory', title: 'ECHOCHAIN VI: MEMORY', genre: 'Temporal Mystery', threads: ['hourons'], knot: null, synopsis: 'The card in the trunk. Frankie and Kimmy. Two names on paper that\'s been waiting decades to be found. A memory from the past? A warning from the future? A parallel timeline bleeding through? The Fabric doesn\'t just connect people—it connects whens. Jose could write a letter dated 2025 in 1962. Helena could prepare gifts for inheritors she\'d never meet. And somewhere, somewhen, Frankie wrote to Kimmy—or will write, or is writing still. Time bleeds. The card is the anchor. Everything else is discovery. All three possibilities hold space together.' }
+];
+
+let currentThread = null;
+let currentStrand = null;
+
+// FUNCTIONS
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelector(`.nav-link[data-section="${id}"]`)?.classList.add('active');
+  
+  // Reset views
+  if (id === 'threads') showThreadsMain();
+  if (id === 'universe') showUniverseMain();
+  
+  window.scrollTo(0, 0);
+}
+
+function selectAuthor(author) {
+  document.querySelectorAll('.author-option').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.author-profile').forEach(p => p.classList.remove('active'));
+  
+  event.currentTarget.classList.add('selected');
+  document.getElementById(`author-${author}`).classList.add('active');
+}
+
+function renderThreadChips(containerId, clickHandler) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  
+  Object.entries(threads).forEach(([key, thread]) => {
+    const chip = document.createElement('div');
+    chip.className = 'thread-chip';
+    chip.style.background = `${thread.color}15`;
+    chip.style.border = `1px solid ${thread.color}44`;
+    chip.style.color = thread.color;
+    chip.textContent = thread.name;
+    chip.onclick = () => clickHandler(key);
+    chip.onmouseenter = () => chip.style.borderColor = thread.color;
+    chip.onmouseleave = () => chip.style.borderColor = `${thread.color}44`;
+    container.appendChild(chip);
+  });
+}
+
+function showThreadsMain() {
+  document.getElementById('threads-main').style.display = 'block';
+  document.getElementById('thread-detail').classList.remove('active');
+  document.getElementById('strand-detail').classList.remove('active');
+  currentThread = null;
+  currentStrand = null;
+}
+
+function showThreadDetail(key) {
+  currentThread = key;
+  const thread = threads[key];
+  
+  document.getElementById('threads-main').style.display = 'none';
+  document.getElementById('strand-detail').classList.remove('active');
+  document.getElementById('thread-detail').classList.add('active');
+  
+  document.getElementById('thread-detail-name').textContent = thread.name;
+  document.getElementById('thread-detail-name').style.color = thread.color;
+  document.getElementById('thread-detail-name').style.textShadow = `0 0 40px ${thread.color}44`;
+  document.getElementById('thread-detail-visual').textContent = thread.visual;
+  document.getElementById('thread-detail-behavior').textContent = thread.behavior;
+  document.getElementById('thread-detail-desc').textContent = thread.description;
+  
+  const strandsGrid = document.getElementById('strands-grid');
+  strandsGrid.innerHTML = '';
+  
+  Object.entries(thread.strands).forEach(([strandKey, strand]) => {
+    const card = document.createElement('div');
+    card.className = 'strand-card';
+    card.style.background = `${thread.color}08`;
+    card.style.border = `1px solid ${thread.color}33`;
+    card.innerHTML = `
+      <div class="strand-card-name" style="color: ${thread.color}">${strand.name}</div>
+      <div class="strand-card-abilities">${strand.abilities.slice(0, 3).join(' • ')}${strand.abilities.length > 3 ? ' • ...' : ''}</div>
+    `;
+    card.onclick = () => showStrandDetail(key, strandKey);
+    card.onmouseenter = () => card.style.borderColor = thread.color;
+    card.onmouseleave = () => card.style.borderColor = `${thread.color}33`;
+    strandsGrid.appendChild(card);
+  });
+  
+  window.scrollTo(0, 0);
+}
+
+function showStrandDetail(threadKey, strandKey) {
+  currentThread = threadKey;
+  currentStrand = strandKey;
+  const thread = threads[threadKey];
+  const strand = thread.strands[strandKey];
+  
+  document.getElementById('threads-main').style.display = 'none';
+  document.getElementById('thread-detail').classList.remove('active');
+  document.getElementById('strand-detail').classList.add('active');
+  
+  document.getElementById('strand-back-thread').textContent = thread.name;
+  document.getElementById('strand-detail-name').textContent = strand.name;
+  document.getElementById('strand-detail-name').style.color = thread.color;
+  document.getElementById('strand-detail-name').style.textShadow = `0 0 40px ${thread.color}44`;
+  
+  const abilitiesList = document.getElementById('abilities-list');
+  abilitiesList.innerHTML = '';
+  strand.abilities.forEach(ability => {
+    const chip = document.createElement('div');
+    chip.className = 'ability-chip';
+    chip.style.background = `${thread.color}15`;
+    chip.style.border = `1px solid ${thread.color}44`;
+    chip.style.color = thread.color;
+    chip.textContent = ability;
+    abilitiesList.appendChild(chip);
+  });
+  
+  const knotsSection = document.getElementById('knots-section');
+  const knotsGrid = document.getElementById('knots-grid');
+  
+  if (strand.knots.length > 0) {
+    knotsSection.style.display = 'block';
+    knotsGrid.innerHTML = '';
+    
+    strand.knots.forEach(knotKey => {
+      const knot = knots[knotKey];
+      const card = document.createElement('div');
+      card.className = 'knot-card';
+      card.innerHTML = `
+        <div class="knot-card-name">${knot.name}</div>
+        <div class="knot-card-threads">${knot.threads.join(' + ')}</div>
+      `;
+      card.onclick = () => showKnotDetail(knotKey);
+      knotsGrid.appendChild(card);
+    });
+  } else {
+    knotsSection.style.display = 'none';
+  }
+  
+  document.getElementById('knot-detail').classList.remove('active');
+  window.scrollTo(0, 0);
+}
+
+function showKnotDetail(knotKey) {
+  const knot = knots[knotKey];
+  document.getElementById('knot-detail-name').textContent = knot.name;
+  document.getElementById('knot-detail-shared').textContent = knot.shared;
+  document.getElementById('knot-detail-desc').textContent = knot.description;
+  document.getElementById('knot-detail').classList.add('active');
+}
+
+function closeKnotDetail() {
+  document.getElementById('knot-detail').classList.remove('active');
+}
+
+function showUniverseMain() {
+  document.getElementById('universe-main').style.display = 'block';
+  document.getElementById('series-detail').classList.remove('active');
+}
+
+function showSeriesDetail(id) {
+  const s = series.find(x => x.id === id);
+  
+  document.getElementById('universe-main').style.display = 'none';
+  document.getElementById('series-detail').classList.add('active');
+  
+  document.getElementById('series-detail-genre').textContent = s.genre.toUpperCase();
+  document.getElementById('series-detail-title').textContent = s.title;
+  document.getElementById('series-detail-synopsis').textContent = s.synopsis;
+  
+  const threadsContainer = document.getElementById('series-threads');
+  threadsContainer.innerHTML = '';
+  
+  if (s.threads === 'all') {
+    Object.entries(threads).forEach(([key, thread]) => {
+      const chip = document.createElement('div');
+      chip.className = 'thread-chip';
+      chip.style.background = `${thread.color}15`;
+      chip.style.border = `1px solid ${thread.color}44`;
+      chip.style.color = thread.color;
+      chip.textContent = thread.name;
+      chip.onclick = () => { showSection('threads'); showThreadDetail(key); };
+      chip.onmouseenter = () => chip.style.borderColor = thread.color;
+      chip.onmouseleave = () => chip.style.borderColor = `${thread.color}44`;
+      threadsContainer.appendChild(chip);
+    });
+  } else {
+    s.threads.forEach(key => {
+      const thread = threads[key];
+      const chip = document.createElement('div');
+      chip.className = 'thread-chip';
+      chip.style.background = `${thread.color}15`;
+      chip.style.border = `1px solid ${thread.color}44`;
+      chip.style.color = thread.color;
+      chip.textContent = thread.name;
+      chip.onclick = () => { showSection('threads'); showThreadDetail(key); };
+      chip.onmouseenter = () => chip.style.borderColor = thread.color;
+      chip.onmouseleave = () => chip.style.borderColor = `${thread.color}44`;
+      threadsContainer.appendChild(chip);
+    });
+  }
+  
+  const featuredKnot = document.getElementById('featured-knot');
+  if (s.knot) {
+    const knot = knots[s.knot];
+    featuredKnot.style.display = 'block';
+    document.getElementById('featured-knot-name').textContent = knot.name;
+    document.getElementById('featured-knot-desc').textContent = knot.description;
+  } else {
+    featuredKnot.style.display = 'none';
+  }
+  
+  window.scrollTo(0, 0);
+}
+
+// INIT
+function init() {
+  // Render thread chips on dhvanicatena page
+  renderThreadChips('dhvani-thread-links', (key) => {
+    showSection('threads');
+    showThreadDetail(key);
+  });
+  
+  // Render threads grid
+  const threadsGrid = document.getElementById('threads-grid');
+  Object.entries(threads).forEach(([key, thread]) => {
+    const card = document.createElement('div');
+    card.className = 'thread-card';
+    card.style.background = `linear-gradient(135deg, ${thread.color}11 0%, transparent 100%)`;
+    card.style.border = `1px solid ${thread.color}33`;
+    card.innerHTML = `
+      <div class="thread-card-name" style="color: ${thread.color}; text-shadow: 0 0 20px ${thread.color}44">${thread.name}</div>
+      <div class="thread-card-info"><strong>Visual:</strong> ${thread.visual}</div>
+      <div class="thread-card-info"><strong>Behavior:</strong> ${thread.behavior}</div>
+    `;
+    card.onclick = () => showThreadDetail(key);
+    card.onmouseenter = () => { card.style.borderColor = thread.color; };
+    card.onmouseleave = () => { card.style.borderColor = `${thread.color}33`; };
+    threadsGrid.appendChild(card);
+  });
+  
+  // Render series list
+  const seriesList = document.getElementById('series-list');
+  series.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'series-card';
+    card.innerHTML = `
+      <div>
+        <div class="series-card-title">${s.title}</div>
+        <div class="series-card-genre">${s.genre}</div>
+      </div>
+      <div class="series-card-arrow">→</div>
+    `;
+    card.onclick = () => showSeriesDetail(s.id);
+    seriesList.appendChild(card);
+  });
+}
+
+init();
+</script>
+
+</body>
+</html>
